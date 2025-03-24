@@ -1,0 +1,63 @@
+/* Custom SCSS for additional styling that Tailwind doesn't handle well */
+
+// Enhanced accessibility focus styles
+nav a:focus-visible,
+nav button:focus-visible {
+  outline: 2px solid #c4a77d;
+  outline-offset: 2px;
+}
+
+// Additional mobile menu transition refinements
+.mobile-menu {
+  overflow: hidden;
+
+  // Improve transition performance with hardware acceleration
+  transform: translateZ(0);
+  will-change: max-height, opacity;
+}
+
+// Prevent FOUC (Flash of Unstyled Content) for navigation links
+.lg\:flex a {
+  opacity: 0; // Will be animated by GSAP
+}
+
+// Enhanced hover interactions for links
+.lg\:flex a.group {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #c4a77d;
+  }
+
+  &:hover::after {
+    width: 100%;
+    left: 0;
+  }
+}
+
+// Specific styles for the logo container
+.flex-shrink-0 a span:first-child {
+  box-shadow: 0 2px 10px rgba(156, 123, 81, 0.2);
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(156, 123, 81, 0.3);
+  }
+}
+
+// Scrolled navbar backdrop filter for better legibility
+nav.bg-white\/95 {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+// Fix for z-index stacking context
+nav {
+  transform: translateZ(0);
+}

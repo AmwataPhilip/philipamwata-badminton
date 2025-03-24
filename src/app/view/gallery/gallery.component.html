@@ -1,0 +1,240 @@
+<!-- Gallery section with photos and videos -->
+<section id="gallery" class="py-20 bg-gray-50" aria-labelledby="gallery-title">
+  <div class="container px-6 mx-auto">
+    <!-- Section header -->
+    <div class="mb-16 text-center">
+      <h2 id="gallery-title" class="mb-4 text-3xl font-bold md:text-4xl">
+        Gallery
+      </h2>
+      <div class="w-20 h-1 mx-auto mb-6 bg-primary"></div>
+      <p class="max-w-2xl mx-auto text-gray-600">
+        A visual journey through my badminton career, featuring match
+        highlights, training sessions, and tournament moments.
+      </p>
+    </div>
+
+    <!-- Gallery filters -->
+    <div class="flex flex-wrap justify-center gap-2 mb-10">
+      <button
+        class="px-4 py-2 text-sm font-medium rounded-full"
+        [ngClass]="{
+          'bg-primary text-black': activeFilter === 'all',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800': activeFilter !== 'all'
+        }"
+        (click)="filterGallery('all')"
+        aria-label="Show all gallery items"
+      >
+        All
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-medium rounded-full"
+        [ngClass]="{
+          'bg-primary text-black': activeFilter === 'tournament',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800':
+            activeFilter !== 'tournament'
+        }"
+        (click)="filterGallery('tournament')"
+        aria-label="Show tournament related gallery items"
+      >
+        Tournaments
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-medium rounded-full"
+        [ngClass]="{
+          'bg-primary text-black': activeFilter === 'training',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800':
+            activeFilter !== 'training'
+        }"
+        (click)="filterGallery('training')"
+        aria-label="Show training related gallery items"
+      >
+        Training
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-medium rounded-full"
+        [ngClass]="{
+          'bg-primary text-black': activeFilter === 'team',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800': activeFilter !== 'team'
+        }"
+        (click)="filterGallery('team')"
+        aria-label="Show team related gallery items"
+      >
+        Team
+      </button>
+    </div>
+
+    <!-- Gallery grid -->
+    <div
+      #galleryGrid
+      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      <div
+        *ngFor="let item of placeholderItems"
+        class="overflow-hidden rounded-lg shadow-md gallery-item hover:shadow-lg"
+        [ngClass]="{ hidden: !shouldShowItem(item) }"
+      >
+        <!-- Image -->
+        <ng-container ngIf="item.type === 'image'">
+          <div
+            class="relative overflow-hidden bg-gray-200 cursor-pointer aspect-w-16 aspect-h-9"
+            (click)="openLightbox(item)"
+            [attr.aria-label]="'View ' + item.caption"
+          >
+            <!-- Placeholder for gallery image -->
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <span>{{ item.caption }}</span>
+            </div>
+
+            <!-- Image overlay with info -->
+            <div
+              class="absolute inset-0 flex items-end bg-black opacity-0 bg-opacity-20 hover:opacity-100"
+            >
+              <div
+                class="w-full p-4 text-white bg-gradient-to-t from-black to-transparent"
+              >
+                <p class="text-sm font-medium line-clamp-2">
+                  {{ item.caption }}
+                </p>
+                <p ngIf="item.date" class="text-xs opacity-80">
+                  {{ item.date }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- YouTube video thumbnail -->
+        <ng-container ngIf="item.type === 'youtube'">
+          <div
+            class="relative overflow-hidden bg-gray-200 cursor-pointer aspect-w-16 aspect-h-9"
+            (click)="openLightbox(item)"
+            [attr.aria-label]="'View ' + item.caption"
+          >
+            <!-- Placeholder for video thumbnail -->
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <span>{{ item.caption }}</span>
+            </div>
+
+            <!-- Play button overlay -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div
+                class="flex items-center justify-center w-16 h-16 rounded-full bg-primary bg-opacity-90"
+              >
+                <svg
+                  class="w-8 h-8 text-black"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Video info overlay -->
+            <div
+              class="absolute inset-0 flex items-end bg-black opacity-0 bg-opacity-20 hover:opacity-100"
+            >
+              <div
+                class="w-full p-4 text-white bg-gradient-to-t from-black to-transparent"
+              >
+                <p class="text-sm font-medium line-clamp-2">
+                  {{ item.caption }}
+                </p>
+                <p ngIf="item.date" class="text-xs opacity-80">
+                  {{ item.date }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Empty state message when no items match filter -->
+    <div
+      ngIf="!placeholderItems.some(item => shouldShowItem(item))"
+      class="py-10 text-center"
+    >
+      <p class="text-gray-500">
+        No gallery items found for the selected filter.
+      </p>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div
+    ngIf="isLightboxOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
+    (click)="closeLightbox()"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lightbox-caption"
+  >
+    <button
+      class="absolute z-10 p-2 text-white top-4 right-4"
+      aria-label="Close gallery lightbox"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        ></path>
+      </svg>
+    </button>
+
+    <!-- Lightbox content -->
+    <div
+      class="w-full max-w-4xl p-4 mx-auto"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Image -->
+      <ng-container ngIf="selectedItem && selectedItem.type === 'image'">
+        <div class="overflow-hidden bg-gray-200 rounded-lg">
+          <!-- Placeholder for full-size image -->
+          <div
+            class="flex items-center justify-center text-gray-400 aspect-w-16 aspect-h-9"
+          >
+            <span>Full size image: {{ selectedItem?.caption }}</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- YouTube video -->
+      <ng-container ngIf="selectedItem && selectedItem.type === 'youtube'">
+        <div class="aspect-w-16 aspect-h-9">
+          <iframe
+            [src]="selectedItem?.safeUrl"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="w-full h-full rounded-lg"
+            title="{{ selectedItem?.caption }}"
+          ></iframe>
+        </div>
+      </ng-container>
+
+      <!-- Caption -->
+      <div ngIf="selectedItem" class="mt-4 text-white">
+        <h3 id="lightbox-caption" class="text-xl font-bold">
+          {{ selectedItem?.caption }}
+        </h3>
+        <p ngIf="selectedItem.date" class="mt-1 text-sm opacity-80">
+          {{ selectedItem?.date }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

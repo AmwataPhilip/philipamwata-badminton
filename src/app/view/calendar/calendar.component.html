@@ -1,0 +1,205 @@
+<!-- Calendar section with upcoming events -->
+<section
+  id="calendar"
+  class="py-20 bg-gray-50"
+  aria-labelledby="calendar-title"
+>
+  <div class="container px-6 mx-auto">
+    <!-- Section header -->
+    <div class="mb-16 text-center">
+      <h2
+        id="calendar-title"
+        class="mb-4 text-3xl font-bold calendar-header md:text-4xl"
+      >
+        Upcoming Events
+      </h2>
+      <div class="w-20 h-1 mx-auto mb-6 bg-primary"></div>
+      <p class="max-w-2xl mx-auto text-gray-600 calendar-header">
+        Stay updated on my tournament schedule, training sessions, and community
+        events.
+      </p>
+    </div>
+
+    <!-- Event type filters -->
+    <div class="flex flex-wrap justify-center gap-2 mb-10">
+      <button
+        class="px-4 py-2 text-sm font-medium rounded-full"
+        [ngClass]="{
+          'bg-primary text-black': activeFilter === 'all',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800': activeFilter !== 'all'
+        }"
+        (click)="filterEvents('all')"
+        aria-label="Show all events"
+      >
+        All Events
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-medium rounded-full"
+        [ngClass]="{
+          'bg-primary text-black': activeFilter === 'tournament',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800':
+            activeFilter !== 'tournament'
+        }"
+        (click)="filterEvents('tournament')"
+        aria-label="Show tournaments only"
+      >
+        Tournaments
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-medium rounded-full"
+        [ngClass]="{
+          'bg-primary text-black': activeFilter === 'training',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800':
+            activeFilter !== 'training'
+        }"
+        (click)="filterEvents('training')"
+        aria-label="Show training sessions only"
+      >
+        Training
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-medium rounded-full"
+        [ngClass]="{
+          'bg-primary text-black': activeFilter === 'community',
+          'bg-gray-200 hover:bg-gray-300 text-gray-800':
+            activeFilter !== 'community'
+        }"
+        (click)="filterEvents('community')"
+        aria-label="Show community events only"
+      >
+        Community
+      </button>
+    </div>
+
+    <!-- Events list -->
+    <div class="max-w-4xl mx-auto events-list">
+      <div
+        *ngFor="let event of placeholderEvents"
+        class="mb-6 overflow-hidden bg-white rounded-lg shadow-sm event-card hover:shadow-md"
+        [ngClass]="{ hidden: !shouldShowEvent(event) }"
+      >
+        <div class="p-6 md:flex">
+          <!-- Event date -->
+          <div class="flex flex-col justify-center mb-4 md:w-1/4 md:mb-0">
+            <div class="text-center md:text-left">
+              <div class="mb-1 text-sm text-gray-500">
+                {{ formatDateRange(event.startDate, event.endDate) }}
+              </div>
+              <div
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [ngClass]="getEventTypeClass(event.eventType)"
+              >
+                <span
+                  [innerHTML]="getEventTypeIcon(event.eventType)"
+                  class="mr-1"
+                ></span>
+                {{ event.eventType | titlecase }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Event details -->
+          <div class="border-gray-200 md:w-3/4 md:pl-6 md:border-l">
+            <h3 class="mb-2 text-xl font-bold">{{ event.title }}</h3>
+            <p class="mb-3 text-gray-600">{{ event.description }}</p>
+
+            <!-- Event location -->
+            <div class="flex items-center mb-4 text-sm text-gray-500">
+              <svg
+                class="w-4 h-4 mr-1"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <span>{{ event.location }}</span>
+            </div>
+
+            <!-- Registration link if available -->
+            <div *ngIf="event.registrationUrl" class="mt-2">
+              <a
+                [href]="event.registrationUrl"
+                target="_blank"
+                class="inline-flex items-center font-medium text-primary hover:text-yellow-600"
+                (click)="logEventClick(event.id, event.title)"
+                [attr.aria-label]="'Register for ' + event.title"
+              >
+                Register for Event
+                <svg
+                  class="w-4 h-4 ml-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  ></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state when no events match filter -->
+      <div
+        ngIf="!placeholderEvents.some(event => shouldShowEvent(event))"
+        class="py-10 text-center bg-white rounded-lg"
+      >
+        <p class="text-gray-500">No events found for the selected filter.</p>
+      </div>
+    </div>
+
+    <!-- Add to calendar options -->
+    <div class="max-w-4xl mx-auto mt-12 text-center">
+      <h3 class="mb-4 text-lg font-bold">Add My Events to Your Calendar</h3>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a
+          href="#"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+          aria-label="Add to Google Calendar"
+        >
+          <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 22c-5.523 0-10-4.477-10-10s4.477-10 10-10 10 4.477 10 10-4.477 10-10 10zm-1-13h2v2h-2v-2zm0 4h2v6h-2v-6z"
+            />
+          </svg>
+          Google Calendar
+        </a>
+        <a
+          href="#"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+          aria-label="Add to Apple Calendar"
+        >
+          <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 22c-5.523 0-10-4.477-10-10s4.477-10 10-10 10 4.477 10 10-4.477 10-10 10zm-1-13h2v2h-2v-2zm0 4h2v6h-2v-6z"
+            />
+          </svg>
+          Apple Calendar
+        </a>
+        <a
+          href="#"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+          aria-label="Download ICS File"
+        >
+          <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 22c-5.523 0-10-4.477-10-10s4.477-10 10-10 10 4.477 10 10-4.477 10-10 10zm-1-13h2v2h-2v-2zm0 4h2v6h-2v-6z"
+            />
+          </svg>
+          Download ICS
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

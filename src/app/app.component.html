@@ -1,1 +1,67 @@
-<router-outlet></router-outlet>
+<!-- Main structure with semantic HTML for better SEO and accessibility -->
+<div class="min-h-screen bg-white">
+  <!-- Skip to main content link for accessibility -->
+  <a
+    href="#main-content"
+    class="z-50 px-4 py-2 text-black sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary"
+    tabindex="0"
+  >
+    Skip to main content
+  </a>
+
+  <!-- Navigation -->
+  <app-navbar></app-navbar>
+
+  <!-- Main content area -->
+  <main id="main-content">
+    <app-hero></app-hero>
+    <app-about></app-about>
+    <app-achievements></app-achievements>
+    <app-skills></app-skills>
+    <app-gallery></app-gallery>
+    <app-blog></app-blog>
+    <app-tech-badminton></app-tech-badminton>
+    <app-community></app-community>
+    <app-calendar></app-calendar>
+    <app-contact></app-contact>
+  </main>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+
+  <!-- Schema.org structured data for SEO -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Philip Amwata",
+      "url": "https://badminton.philipamwata.net",
+      "image": "https://badminton.philipamwata.net/assets/images/philip-amwata-profile.jpg",
+      "sameAs": [
+        "https://www.linkedin.com/in/philipamwata",
+        "https://www.amwatatech.com"
+      ],
+      "jobTitle": "Professional Badminton Player",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Amwata Tech"
+      },
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "University of Cape Town"
+      },
+      "nationality": {
+        "@type": "Country",
+        "name": "Kenya"
+      },
+      "knowsAbout": [
+        "Badminton",
+        "Software Development",
+        "AI",
+        "Edtech",
+        "ESG"
+      ],
+      "description": "Professional badminton player ranked 8th in South Africa. Specializing in singles competition with international tournament experience."
+    }
+  </script>
+</div>

@@ -1,0 +1,165 @@
+<!-- Refined navigation with improved accessibility and brand consistency -->
+<nav
+  [ngClass]="{
+    'bg-white/95 backdrop-blur-sm shadow-soft': isScrolled,
+    'bg-transparent': !isScrolled
+  }"
+  class="fixed z-50 w-full"
+  aria-label="Main navigation"
+>
+  <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo and brand with updated styling -->
+      <div class="flex items-center flex-shrink-0">
+        <a
+          href="#hero"
+          class="flex items-center text-xl font-bold font-heading"
+          [ngClass]="{
+            'text-neutral-dark': isScrolled,
+            'text-primary-dark': !isScrolled
+          }"
+          aria-label="Philip Amwata's badminton homepage"
+        >
+          <span
+            class="flex items-center justify-center w-10 h-10 mr-3 text-white rounded-full bg-primary-dark"
+            >PA</span
+          >
+          <span
+            [ngClass]="{
+              'opacity-100': isScrolled,
+              'opacity-0 lg:opacity-100': !isScrolled
+            }"
+            class="opacity"
+          >
+            Philip Amwata
+          </span>
+        </a>
+      </div>
+
+      <!-- Desktop navigation with hover effects -->
+      <div class="hidden lg:flex lg:items-center lg:space-x-6">
+        <ng-container *ngFor="let link of navLinks">
+          <a
+            [href]="link.href"
+            [attr.aria-label]="link.ariaLabel"
+            class="relative px-3 py-2 text-sm font-medium group font-heading desktop-nav-link"
+            [ngClass]="{
+              'text-neutral-dark hover:text-primary-dark': isScrolled,
+              'text-white hover:text-primary-light': !isScrolled
+            }"
+            (click)="logNavClick(link.label)"
+          >
+            {{ link.label }}
+            <span
+              class="absolute bottom-0 left-0 h-0.5 bg-primary-dark w-0 group-hover:w-full"
+            ></span>
+          </a>
+        </ng-container>
+
+        <!-- CTA Button with enhanced styling -->
+        <a
+          href="#contact"
+          class="px-5 py-2 ml-4 text-sm font-medium text-white rounded-lg shadow-soft"
+          [ngClass]="{
+            'bg-primary-dark hover:bg-primary-600': isScrolled,
+            'bg-primary hover:bg-primary-dark': !isScrolled
+          }"
+          aria-label="Contact Philip Amwata"
+          (click)="logNavClick('Contact CTA')"
+        >
+          Get In Touch
+        </a>
+      </div>
+
+      <!-- Mobile menu button with improved interaction -->
+      <div class="flex items-center lg:hidden">
+        <button
+          (click)="toggleMenu()"
+          type="button"
+          class="inline-flex items-center justify-center p-2 rounded-md focus:outline-none"
+          [ngClass]="{
+            'text-neutral-dark hover:text-primary-dark hover:bg-primary-100':
+              isScrolled,
+            'text-white hover:text-primary-light hover:bg-white/10': !isScrolled
+          }"
+          [attr.aria-expanded]="isMenuOpen"
+          aria-controls="mobile-menu"
+          aria-label="Toggle navigation menu"
+        >
+          <span class="sr-only">{{
+            isMenuOpen ? "Close menu" : "Open menu"
+          }}</span>
+          <!-- Icon when menu is closed -->
+          <svg
+            *ngIf="!isMenuOpen"
+            class="w-6 h-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+          <!-- Icon when menu is open -->
+          <svg
+            *ngIf="isMenuOpen"
+            class="w-6 h-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu with enhanced styling and animation references -->
+  <div
+    class="overflow-hidden mobile-menu lg:hidden"
+    [ngClass]="{
+      'max-h-96 opacity-100': isMenuOpen,
+      'max-h-0 opacity-0': !isMenuOpen
+    }"
+    id="mobile-menu"
+  >
+    <div
+      class="px-3 pt-3 pb-4 space-y-2 bg-white/95 backdrop-blur-sm shadow-medium sm:px-4"
+    >
+      <ng-container *ngFor="let link of navLinks">
+        <a
+          [href]="link.href"
+          [attr.aria-label]="link.ariaLabel"
+          class="block px-4 py-3 text-base font-medium rounded-lg text-neutral-dark hover:bg-primary-100 hover:text-primary-dark"
+          (click)="closeMenu(); logNavClick(link.label)"
+        >
+          {{ link.label }}
+        </a>
+      </ng-container>
+
+      <!-- Mobile CTA Button with improved styling -->
+      <a
+        href="#contact"
+        class="block w-full px-4 py-3 mt-4 text-base font-medium text-center text-white rounded-lg bg-primary-dark hover:bg-primary-600 shadow-soft"
+        aria-label="Contact Philip Amwata"
+        (click)="closeMenu(); logNavClick('Mobile Contact CTA')"
+      >
+        Get In Touch
+      </a>
+    </div>
+  </div>
+</nav>
